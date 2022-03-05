@@ -1,4 +1,4 @@
-
+<img scr="https://github.com/CourbotA/Naruto/blob/main/logo.svg">
 # Naruto: shape and color recognition project.
 
 The goal of this project is to interpret the signs of naruto from a database that contains images of people who make signs with their hands.
