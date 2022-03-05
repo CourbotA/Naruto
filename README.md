@@ -1,3 +1,4 @@
+![Alt text](https://github.com/CourbotA/Naruto/blob/main/logo.svg)
 <img scr="https://github.com/CourbotA/Naruto/blob/main/logo.svg">
 # Naruto: shape and color recognition project.
 
