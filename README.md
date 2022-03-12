@@ -15,3 +15,20 @@ we will use **Python** to process images and to create interfaces.
 - GONCALVES DE CARVALHO Mathilde
 - LELIEVRE Kevin
 - SABIR Ilyass
+
+## Acquisition des données
+Prise en photos des 12 signes da naruto suivantes: 
+<img align="right" alt="coding" width="400" src="https://github.com/CourbotA/Naruto/blob/main/narutoSignes.jpg">
+*  L'oiseau (ou le coq)
+*  Le cochon ( porc ou sanglier)
+*  Le chien
+*  Le Dragon
+*  Le Lapin
+*  Le cheval
+*  Le Boeuf (ou bufffle)
+*  Le Singe
+*  Le Mouton (ou chèvre)
+*  Le Rat
+*  Le Serpent
+*  Le Tigre.
+On a pris **13 photos par signes**, et donc 156 images au total.
