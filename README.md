@@ -31,4 +31,5 @@ Prise en photos des 12 signes da naruto suivantes:
 *  Le Rat
 *  Le Serpent
 *  Le Tigre.
+
 On a pris **13 photos par signes**, et donc 156 images au total.
