@@ -33,3 +33,15 @@ Prise en photos des 12 signes da naruto suivantes:
 *  Le Tigre.
 
 On a pris **13 photos par signe**, et donc 156 images au total.
+
+## Image preprocessing
+The first step consist on segmenting the hands using color attributes to get a mask of the hands.
+
+## Feature choice and detection
+This step consist on finding the relevent features of the dataset whiwh will allow us to classify our images.
+We therefore have to calculate the feature vector of each image and elaborate a classification method that works on our dataset 
+with an accuracy > 0.9X
+
+## GUI
+The objective is to build an interface in C++ and create a fighting game.
+The user will upload hand signs, that the software will recognize those and combination will launch attacks on the other player.
