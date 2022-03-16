@@ -30,9 +30,9 @@ for image in glob.glob('BDD/*.bmp'):
     es_size = (3, 3)
     es = cv.getStructuringElement(cv.MORPH_RECT, es_size)
 
-    cv.imshow("iiiiimage test 1 " + str(index), img[:, :, 0])
-    cv.imshow("iiiiimage test 2" + str(index), img[:, :, 1])
-    cv.imshow("iiiiimage test 3" + str(index), img[:, :, 2])
+    cv.imshow("image test 1 | " + str(index), img[:, :, 0])
+    cv.imshow("image test 2 | " + str(index), img[:, :, 1])
+    cv.imshow("image test 3 | " + str(index), img[:, :, 2])
 
     for j in range(3):
         img[:, :, j] = cv.GaussianBlur(img[:, :, j], (5, 5), cv.BORDER_DEFAULT)
