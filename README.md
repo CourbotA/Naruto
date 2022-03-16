@@ -36,8 +36,8 @@ We took **13 pictures per sign**, so 156 pictures in total.
 
 here is an extract of the data base we built: 
 
-![Alt text](https://github.com/CourbotA/Naruto/blob/main/)
-<img scr="https://github.com/CourbotA/Naruto/blob/main/">
+![Alt text](https://github.com/CourbotA/Naruto/blob/main/extrait_BDD.png)
+<img scr="https://github.com/CourbotA/Naruto/blob/main/extrait_BDD.png">
 
 Since our goal is to recognize the signs of Naruto, we chose to put a blank sheet of paper of A3 size.
 
