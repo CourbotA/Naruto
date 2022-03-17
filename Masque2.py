@@ -8,10 +8,10 @@ import cv2 as cv
 from matplotlib import pyplot as plt
 
 # paramètres:
-espace = 'HSV' 
+espace = 'HSV'
 nbr_classes = 180
-seuil_min = 130
-seuil_max = 180
+seuil_min = 40
+seuil_max = 225
 composante_couleur = 1
 
 # lire et affichage de l'image qu'on veut
@@ -39,17 +39,19 @@ histogramme = cv.calcHist([image_changed], [composante_couleur], None, [nbr_clas
 # roi_x, roi_y, roi_w, roi_h = cv.selectROI('ROI', image, False, False)
 
 cv.normalize(histogramme, histogramme, 0, 255, cv.NORM_MINMAX)
-plt.plot(histogramme )
+plt.plot(histogramme)
 plt.title("histogramme de la composante H (dans HSV) de l'image:  " + chemain)
 plt.show(block = False)
 plt.pause(0.01)
 plt.clf()
 
 # construire le masque
-mask = cv.calcBackProject([image_changed], [0], histogramme, [0, nbr_classes], 1)
+mask = cv.calcBackProject([image_changed], [composante_couleur], histogramme, [0, nbr_classes], 1)
 _, mask2 = cv.threshold(mask, seuil_min, seuil_max, cv.THRESH_BINARY)
-mask2 = cv.erode(cv.dilate(mask, None, iterations = 3), None, iterations = 3)
-cv.imshow("masque de l'image " + chemain ,mask2)
+mask2 = cv.erode(cv.dilate(mask, None, iterations = 4), None, iterations = 4)
+_, mask_final = cv.threshold(mask2, 120, 140, cv.THRESH_BINARY)
+cv.imshow("masque de l'image " + chemain ,mask_final)
+
 print("it's ok")
 cv.waitKey(0)
 cv.destroyWindow()
