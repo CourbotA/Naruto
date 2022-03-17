@@ -8,10 +8,11 @@ import cv2 as cv
 from matplotlib import pyplot as plt
 
 # paramètres:
-espace = 'HSV'
+espace = 'HSV' 
 nbr_classes = 180
-seuil_min = 10
-seuil_max = 25
+seuil_min = 130
+seuil_max = 180
+composante_couleur = 1
 
 # lire et affichage de l'image qu'on veut
 image_name = 'boeuf1'
@@ -33,7 +34,7 @@ image_changed = cv.cvtColor(image, eval("cv.COLOR_BGR2" + espace))
 cv.imshow("image in HSV", image_changed)
 
 # calcul et affichage de l'histogramme de la composante H de l'image (en HSV)
-histogramme = cv.calcHist([image_changed], [0], None, [nbr_classes], [0, 180])
+histogramme = cv.calcHist([image_changed], [composante_couleur], None, [nbr_classes], [0, 180])
 
 # roi_x, roi_y, roi_w, roi_h = cv.selectROI('ROI', image, False, False)
 
