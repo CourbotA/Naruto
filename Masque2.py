@@ -14,8 +14,9 @@ seuil_min = 40
 seuil_max = 225
 composante_couleur = 1
 
+
 # lire et affichage de l'image qu'on veut
-image_name = 'boeuf1'
+image_name = 'cochon4_1'
 chemain = "BDD/" + image_name + ".bmp"
 image = cv.imread(chemain)
 print(chemain)
@@ -52,6 +53,11 @@ mask2 = cv.erode(cv.dilate(mask, None, iterations = 4), None, iterations = 4)
 _, mask_final = cv.threshold(mask2, 120, 140, cv.THRESH_BINARY)
 cv.imshow("masque de l'image " + chemain ,mask_final)
 
+# save images
+chemain_save = 'Masques/masque_' + image_name + '.png'
+status = cv.imwrite(chemain_save, mask_final)
+
 print("it's ok")
+
 cv.waitKey(0)
 cv.destroyWindow()
