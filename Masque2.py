@@ -7,16 +7,26 @@ import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
 
+def FillHole(mask):
+    contours, hierarchy = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    len_contour = len(contours)
+    contour_list = []
+    for i in range(len_contour):
+        drawing = np.zeros_like(mask, np.uint8)  # create a black image
+        img_contour = cv.drawContours(drawing, contours, i, (255, 255, 255), -1)
+        contour_list.append(img_contour)
+
+    out = sum(contour_list)
+    return out
+
 # paramètres:
 espace = 'HSV'
 nbr_classes = 180
-seuil_min = 40
+seuil_min = 60
 seuil_max = 225
-composante_couleur = 1
-
 
 # lire et affichage de l'image qu'on veut
-image_name = 'cochon4_1'
+image_name = 'boeuf5_3'
 chemain = "BDD/" + image_name + ".bmp"
 image = cv.imread(chemain)
 print(chemain)
@@ -34,28 +44,22 @@ cv.imshow(image_name, image)
 image_changed = cv.cvtColor(image, eval("cv.COLOR_BGR2" + espace))
 cv.imshow("image in HSV", image_changed)
 
-# calcul et affichage de l'histogramme de la composante H de l'image (en HSV)
-histogramme = cv.calcHist([image_changed], [composante_couleur], None, [nbr_classes], [0, 180])
+(h, s, v) = cv.split(image_changed)
+v[:] = 60
+img = cv.merge((v,v,s))
+rgb = cv.cvtColor(img, cv.COLOR_HSV2RGB)
+gray = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
+mask = cv.dilate(cv.erode(gray, None, iterations = 3), None, iterations = 3)
+_, mask = cv.threshold(gray, seuil_min, seuil_max, cv.THRESH_BINARY)
+mask = FillHole(mask)
 
-# roi_x, roi_y, roi_w, roi_h = cv.selectROI('ROI', image, False, False)
+es = cv.getStructuringElement(cv.MORPH_RECT, (2, 2))
+mask = cv.erode(mask, es, iterations=1)
+mask = cv.dilate(mask, es, iterations=1)
 
-cv.normalize(histogramme, histogramme, 0, 255, cv.NORM_MINMAX)
-plt.plot(histogramme)
-plt.title("histogramme de la composante H (dans HSV) de l'image:  " + chemain)
-plt.show(block = False)
-plt.pause(0.01)
-plt.clf()
+cv.imshow("image gray", mask)
 
-# construire le masque
-mask = cv.calcBackProject([image_changed], [composante_couleur], histogramme, [0, nbr_classes], 1)
-_, mask2 = cv.threshold(mask, seuil_min, seuil_max, cv.THRESH_BINARY)
-mask2 = cv.erode(cv.dilate(mask, None, iterations = 4), None, iterations = 4)
-_, mask_final = cv.threshold(mask2, 120, 140, cv.THRESH_BINARY)
-cv.imshow("masque de l'image " + chemain ,mask_final)
 
-# save images
-chemain_save = 'Masques/masque_' + image_name + '.png'
-status = cv.imwrite(chemain_save, mask_final)
 
 print("it's ok")
 
