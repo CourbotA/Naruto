@@ -17,7 +17,7 @@ def FillHole(mask):
 # paramètres:
 espace = 'HSV'
 nbr_classes = 180
-seuil_min = 75
+seuil_min = 90
 seuil_max = 225
 
 
@@ -39,23 +39,23 @@ for img in glob.glob('BDD/*.bmp'):
     # changement de l'espace colorimetrique
     image_changed = cv.cvtColor(image, eval("cv.COLOR_BGR2" + espace))
     (h, s, v) = cv.split(image_changed)
-    v[:] = 75
-    h[:] = int(75 / 2)
+    v[:] = seuil_min
+    # h[:] = seuil_max
     img = cv.merge((v, v, s))
     rgb = cv.cvtColor(img, cv.COLOR_HSV2RGB)
     gray = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
 
     # construire le masque
-    mask = cv.dilate(cv.erode(gray, None, iterations=3), None, iterations=3)
+    kernel = np.ones((5, 5), np.float32) / 25
+    gray = cv.filter2D(gray, -1, kernel)
+    es = cv.getStructuringElement(cv.MORPH_RECT, (2, 2))
+    gray = cv.erode(gray, es, iterations = 1)
+    gray = cv.dilate(gray, es, iterations = 1)
+    gray = cv.GaussianBlur(gray, (5, 5), cv.BORDER_DEFAULT)
+    #mask = cv.dilate(cv.erode(gray, None, iterations=3), None, iterations=3)
     _, mask = cv.threshold(gray, seuil_min, seuil_max, cv.THRESH_BINARY)
     mask = FillHole(mask)
-    # es = cv.getStructuringElement(cv.MORPH_RECT, (2, 2))
-    # mask = cv.erode(mask, es, iterations = 1)
-    # mask = cv.dilate(mask, es, iterations = 1)
 
-
-    # cv.imshow("image gray", mask)
-    #save images
     chemin_save = "Masques/masque_" + chemin
     status = cv.imwrite(chemin_save, mask)
 

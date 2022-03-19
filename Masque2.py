@@ -7,6 +7,9 @@ import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
 
+alpha = 1.0 # Simple contrast control
+beta = 0    # Simple brightness control
+
 def FillHole(mask):
     contours, hierarchy = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     len_contour = len(contours)
@@ -22,11 +25,11 @@ def FillHole(mask):
 # paramètres:
 espace = 'HSV'
 nbr_classes = 180
-seuil_min = 60
+seuil_min = 90
 seuil_max = 225
 
 # lire et affichage de l'image qu'on veut
-image_name = 'boeuf5_3'
+image_name = 'boeuf2_1'
 chemain = "BDD/" + image_name + ".bmp"
 image = cv.imread(chemain)
 print(chemain)
@@ -45,17 +48,17 @@ image_changed = cv.cvtColor(image, eval("cv.COLOR_BGR2" + espace))
 cv.imshow("image in HSV", image_changed)
 
 (h, s, v) = cv.split(image_changed)
-v[:] = 60
+v[:] = seuil_min
 img = cv.merge((v,v,s))
 rgb = cv.cvtColor(img, cv.COLOR_HSV2RGB)
 gray = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
+kernel = np.ones((5,5),np.float32)/25
+gray = cv.filter2D(gray,-1,kernel)
 mask = cv.dilate(cv.erode(gray, None, iterations = 3), None, iterations = 3)
+cv.imshow("gray", gray)
 _, mask = cv.threshold(gray, seuil_min, seuil_max, cv.THRESH_BINARY)
 mask = FillHole(mask)
 
-es = cv.getStructuringElement(cv.MORPH_RECT, (2, 2))
-mask = cv.erode(mask, es, iterations=1)
-mask = cv.dilate(mask, es, iterations=1)
 
 cv.imshow("image gray", mask)
 
