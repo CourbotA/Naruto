@@ -1,81 +1,76 @@
 import numpy as np
-from matplotlib import pyplot as plt
-from sklearn.cluster import KMeans
 import cv2 as cv
-import glob
 
-k = 4
-ESPACE = "LAB" #YCrCb, HSV, RGB
-CH = [0, 2]
+class Masque:
+    def __init__(self, image_name):
+        path = "BDD/" + image_name + ".bmp"
+        self.image = cv.imread(path)
 
-index = 0
-for image in glob.glob('BDD/*.bmp'):
-    index += 1
-    print("Image " + str(index) + " : ", image)
-    # Lecture et affichage de l'image
-    img = cv.imread(image)
-    dimensions = img.shape
-    width = dimensions[0]
-    height = dimensions[1]
+    def get_image(self):
+        return self.image
 
-    # choisir une fenetre d'ineteret
-    img = img[100:int(width * 9 / 10), 100: int(height * 9 / 10)]
+    @set
+    def set_image(self, image_name):
+        path = "BDD/" + image_name + ".bmp"
+        self.image = cv.imread(path)
 
-    # redimensionner l'image
-    img = cv.resize(img, (int(width / 2), int(height / 2)))
-    cv.imshow("image " + str(index), img)
+    @staticmethod
+    def min_threshold(): return 90
+    @staticmethod
+    def max_threshold(): return 255
+    @staticmethod
+    def space(): return 'HSV'
+    @staticmethod
+    def space(): return 'HSV'
+    @staticmethod
+    def nbr_classes(): return 180
 
-    # supprission partielle du fond par buttom hat sur les composantes RGB
-    # construire l'élément structurant
-    es_size = (3, 3)
-    es = cv.getStructuringElement(cv.MORPH_RECT, es_size)
+    @classmethod
+    def resize_image(cls, percentage):
+        image = cls.get_image()
+        dimensions = image.shape
+        width = dimensions[0]; height = dimensions[1]
+        # extract a window from the image
+        window = image[100: int(width * 9 / 100), 100: int(height * 9 /10)]
+        image_out = cv.resize(image, (int(width * percentage / 100), int(height * percentage / 100)))
+        return image_out
 
-    cv.imshow("image test 1 | " + str(index), img[:, :, 0])
-    cv.imshow("image test 2 | " + str(index), img[:, :, 1])
-    cv.imshow("image test 3 | " + str(index), img[:, :, 2])
+    @classmethod
+    def change_space_color(cls):
+        image = cls.resize_image()
+        image_changed = cv.cvtColor(image, eval("cv.COLOR_BGR2" + Masque.space()))
+        (h, s, v) = cv.split(image_changed)
+        v[:] = Masque.min_threshold()
+        image_changed = cv.merge((v, v, s))
+        image_changed = cv.cvtColor(image_changed, cv.COLOR_HSV2RGB)
+        image_changed = cv.cvtColor(image_changed, cv.COLOR_RGB2GRAY)
+        return image_changed
 
-    for j in range(3):
-        img[:, :, j] = cv.GaussianBlur(img[:, :, j], (5, 5), cv.BORDER_DEFAULT)
-        # img|:, :, j] = cv.medianBlur(img[:, :, j], 7)
+    @classmethod
+    def fill_hole(cls,mask):
+        contours, hierarchy = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+        len_contour = len(contours)
+        contour_list = []
+        for i in range(len_contour):
+            black_image = np.zeros_like(mask, np.uint8)  # create a black image
+            img_contour = cv.drawContours(black_image, contours, i, (255, 255, 255), -1)
+            contour_list.append(img_contour)
+        out = sum(contour_list)
+        return out
 
-    cv.imshow("image test apres filtrage gaussienne, channel 1" + str(index), img[:, :, 0])
-    cv.imshow("image test apres filtrage gaussienne, channel 2" + str(index), img[:, :, 1])
-    cv.imshow("image test apres filtrage gaussienne, channel 3" + str(index), img[:, :, 2])
-
-    # filtrage gaussienne pour lissage de l'image
-    # img = cv.GaussianBlur(img, (5, 5), cv.BORDER_DEFAULT)
-
-    # supprimer la moyenne par la FFT
-    #Tr_fourier = np.fft.fft2(img)
-    #Tr_fourier_shift = np.fftshift(img)
-    #img = np.ifft2(Tr_fourier_shift)
-    #cv.imshow("image apres suppression de la moyenne" + str(index), img)
+    @classmethod
+    def mask(cls):
+        kernel = np.ones((5, 5), np.float32) / 25
+        mask = Masque.change_space_color()
+        mask = cv.filter2D(mask, -1, kernel)
+        mask = cv.erode(mask, None, iterations = 3)
+        mask = cv.dilate(mask, None, iterations = 3)
+        _, mask = cv.threshold(mask, Masque.min_threshold(), Masque.max_threshold(), cv.THRESH_BINARY)
+        mask = Masque.fill_hole(mask)
+        return mask
 
 
-    # appliquer un filtre median
-    # img = cv.medianBlur(img, 7)
 
-    # Changement d'espace colorimétrique
-    img_changed = cv.cvtColor(img, eval("cv.COLOR_BGR2" + ESPACE))
-    img_changed_ch = img[:, :, CH].reshape(img.shape[0] * img.shape[1], len(CH))
 
-    plt.scatter(img_changed_ch[:, 0], img_changed_ch[:, 1], s=3)
-    plt.show()
 
-    # Algorithme K moyennes
-    k_means = KMeans(n_clusters = k)
-    pred = k_means.fit_predict(img_changed_ch)
-
-    plt.scatter(img_changed_ch[:, 0], img_changed_ch[:, 1], c=pred, s=3)
-    plt.scatter(k_means.cluster_centers_[:, 0], k_means.cluster_centers_[:, 1], s=50, c='red')
-    plt.show()
-
-    # Affichage du résultat
-    result = pred.reshape(img.shape[0], img.shape[1])
-    result = result / (k - 1)
-
-    cv.imshow("kmeans" + str(index), result)
-
-    if cv.waitKey() & 0xFF == ord('q'):
-        break
 

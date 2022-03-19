@@ -7,9 +7,6 @@ import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
 
-alpha = 1.0 # Simple contrast control
-beta = 0    # Simple brightness control
-
 def FillHole(mask):
     contours, hierarchy = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     len_contour = len(contours)
