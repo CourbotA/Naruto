@@ -54,5 +54,5 @@ The objective is to build an interface in C++ and create a fighting game.
 The user will upload hand signs, that the software will recognize those and combination will launch attacks on the other player.
 ## Segmentation of the region of interest (**ROI**)
 By color segmentation in the HSV color space, we were able to extract the hand masks.
-![Alt text](https://github.com/CourbotA/Naruto/blob/main/)
-<img scr="https://github.com/CourbotA/Naruto/blob/main/">
+![Alt text](https://github.com/CourbotA/Naruto/blob/main/Extrait_ROI.png)
+<img scr="https://github.com/CourbotA/Naruto/blob/main/Extrait_ROI.png">
