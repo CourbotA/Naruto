@@ -21,8 +21,6 @@ class Masque:
     @staticmethod
     def space(): return 'HSV'
     @staticmethod
-    def space(): return 'HSV'
-    @staticmethod
     def nbr_classes(): return 180
 
     @classmethod
