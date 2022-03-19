@@ -52,3 +52,5 @@ with an accuracy > 0.9X
 ## GUI
 The objective is to build an interface in C++ and create a fighting game.
 The user will upload hand signs, that the software will recognize those and combination will launch attacks on the other player.
+## Segmentation of the region of interest (**ROI**)
+Using a color segmentation criterion in the HSV color space, we were able to extract the hand masks.
