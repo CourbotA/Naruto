@@ -17,7 +17,7 @@ def FillHole(mask):
 # paramètres:
 espace = 'HSV'
 nbr_classes = 180
-seuil_min = 90
+seuil_min = 85
 seuil_max = 225
 
 
@@ -43,6 +43,9 @@ for img in glob.glob('BDD/*.bmp'):
     # h[:] = seuil_max
     img = cv.merge((v, v, s))
     rgb = cv.cvtColor(img, cv.COLOR_HSV2RGB)
+    rgb[:, :, 0] = rgb[:, :, 0] * (0.2989/0.587)
+    rgb[:, :, 2] = rgb[:, :, 2] * (0.333/0.587)
+
     gray = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
 
     # construire le masque
@@ -56,8 +59,26 @@ for img in glob.glob('BDD/*.bmp'):
     _, mask = cv.threshold(gray, seuil_min, seuil_max, cv.THRESH_BINARY)
     mask = FillHole(mask)
 
-    chemin_save = "Masques/masque_" + chemin
-    status = cv.imwrite(chemin_save, mask)
+    # save masks
+    chemin_mask = "Masques/masque_" + chemin
+    status = cv.imwrite(chemin_mask, mask)
+
+    # save ROI
+    dimensions2 = mask.shape
+    h2, w2 = dimensions2[0], dimensions2[1]
+    # Create an array big enough to hold both images next to each other.
+    n1, n2 = min(width, h2), min(height,w2)
+    ROI = np.zeros((n1, n2, 3), np.float32)
+    for i in range(n1):
+        for j in range(n2):
+            for k in range(3):
+                ROI[i][j][k] = mask[i][j] * image[i][j][k]
+
+
+
+    # ROI = cv.multiply(mask, rgb)
+    chemin_ROI = "ROI/ROI_" + chemin
+    status2 = cv.imwrite(chemin_ROI, ROI)
 
     print("it's ok")
 
