@@ -61,7 +61,11 @@ cv.imshow("image gray", mask)
 
 
 
-print("it's ok")
+
+mat = cv.bitwise_and(image,image, mask = mask)
+cv.imshow("image in mask", mat)
+
+
 
 cv.waitKey(0)
 cv.destroyWindow()

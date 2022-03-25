@@ -67,13 +67,7 @@ for img in glob.glob('BDD/*.bmp'):
     dimensions2 = mask.shape
     h2, w2 = dimensions2[0], dimensions2[1]
     # Create an array big enough to hold both images next to each other.
-    n1, n2 = min(width, h2), min(height,w2)
-    ROI = np.zeros((n1, n2, 3), np.float32)
-    for i in range(n1):
-        for j in range(n2):
-            for k in range(3):
-                ROI[i][j][k] = mask[i][j] * image[i][j][k]
-
+    ROI = cv.bitwise_and(image,image, mask = mask)
 
 
     # ROI = cv.multiply(mask, rgb)
