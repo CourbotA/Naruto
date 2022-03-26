@@ -25,7 +25,7 @@ espace = 'HSV'
 nbr_classes = 180
 seuil_min = 90
 seuil_max = 225
-
+hist = []
 for img in glob.glob('BDD/*.bmp'):
     # lire et affichage de l'image qu'on veut
     image = cv.imread(img)
@@ -81,11 +81,16 @@ for img in glob.glob('BDD/*.bmp'):
     # cv.imshow("gradient de l'image en x", gradx)
     # cv.imshow("gradient de l'image en y", grady)
     grad = cv.add(gradx,grady)
-    cv.imshow("gradient total "+chemain, grad) 
+    #cv.imshow("gradient total "+chemain, grad) 
     
+    
+   
     #HOG descriptor.
-    # hog = cv.HOGDescriptor(grad)
-    # h = hog.compute(mat)
+    hog = cv.HOGDescriptor("hog.xml")
+    winStride = (8,8)
+    padding = (8,8)
+    locations = ((10,20),)
+    hist.append( [hog.compute(grad,winStride,padding,locations), chemain]  )  
     
     
 cv.waitKey(0)
