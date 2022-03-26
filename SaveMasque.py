@@ -25,7 +25,7 @@ for img in glob.glob('BDD/*.bmp'):
     # lire et affichage de l'image qu'on veut
     image = cv.imread(img)
     print(img)
-    chemin = img[4:]
+    chemain = img[4:]
 
     # redimensionnement de l'image
     dimensions = image.shape
@@ -60,8 +60,8 @@ for img in glob.glob('BDD/*.bmp'):
     mask = FillHole(mask)
 
     # save masks
-    chemin_mask = "Masques/masque_" + chemin
-    status = cv.imwrite(chemin_mask, mask)
+    chemain_mask = "Masques/masque_" + chemain
+    status = cv.imwrite(chemain_mask, mask)
 
     # save ROI
     dimensions2 = mask.shape
@@ -71,8 +71,8 @@ for img in glob.glob('BDD/*.bmp'):
 
 
     # ROI = cv.multiply(mask, rgb)
-    chemin_ROI = "ROI/ROI_" + chemin
-    status2 = cv.imwrite(chemin_ROI, ROI)
+    chemain_ROI = "ROI/ROI_" + chemain
+    status2 = cv.imwrite(chemain_ROI, ROI)
 
     print("it's ok")
 

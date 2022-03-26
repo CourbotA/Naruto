@@ -9,7 +9,7 @@ class Masque:
     def get_image(self):
         return self.image
 
-    @set
+    @sets
     def set_image(self, image_name):
         path = "BDD/" + image_name + ".bmp"
         self.image = cv.imread(path)
