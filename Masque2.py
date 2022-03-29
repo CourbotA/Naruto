@@ -6,7 +6,8 @@ Notre but est de segmenter les masques des mains, par un leurs couleurs.
 import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
-import glob
+from numpy import linalg as la
+
 
 def FillHole(mask):
     contours, hierarchy = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
@@ -20,78 +21,127 @@ def FillHole(mask):
     out = sum(contour_list)
     return out
 
+def hog(img):
+    gx = cv.Sobel(img, cv.CV_32F, 1, 0)
+    gy = cv.Sobel(img, cv.CV_32F, 0, 1)
+    mag, ang = cv.cartToPolar(gx, gy)
+
+    bin_n = 16 # Nombre de bins
+    bin = np.int32(bin_n * ang / (2 * np.pi))
+
+    bin_cells, mag_cells = [], []
+    cellx = celly = 8
+
+    for i in range(0, int(img.shape[0] / celly)):
+        for j in range(0, int(img.shape[1] / cellx)):
+            bin_cells.append(bin[i * celly : (i + 1) * celly, j * cellx : (j + 1) * cellx])
+            mag_cells.append(mag[i * celly : (i + 1) * celly, j*cellx : (j + 1) * cellx])
+
+    hists = [np.bincount(b.ravel(), m.ravel(), bin_n) for b, m in zip(bin_cells, mag_cells)]
+    hist = np.hstack(hists)
+
+    # transform to Hellinger kernel
+    eps = 1e-7
+    hist /= hist.sum() + eps #  + eps pour eviter de diviser par 0
+    hist = np.sqrt(hist)
+    hist /= la.norm(hist) + eps
+    # affichage de l'histogramme:
+    plt.figure(figsize=(12, 10))
+    plt.hist(hist)
+    plt.title("l'histogram of HOG")
+    plt.show()
+    return hist
+
+
 # paramètres:
 espace = 'HSV'
 nbr_classes = 180
 seuil_min = 90
 seuil_max = 225
-hist = []
-for img in glob.glob('BDD/*.bmp'):
-    # lire et affichage de l'image qu'on veut
-    image = cv.imread(img)
-    print(img)
-    chemain = img[4:]
-        
-    # lire et affichage de l'image qu'on veut
-    # image_name = 'boeuf2_1'
-    # chemain = "BDD/" + image_name + ".bmp"
-    # image = cv.imread(chemain)
-    # print(chemain)
-    
-    
-    # redimensionnement de l'image
-    dimensions = image.shape
-    width = dimensions[0]
-    height = dimensions[1]
-    image = image[100:int(width * 9 / 10), 100: int(height * 9 / 10)] # extraire une fenetre de l'image
-    image = cv.resize(image, (int(width / 2), int(height / 2)))
-    # affichage de l'image
-   # cv.imshow(image_name, image)
-    
-    # changement de l'espace colorimetrique
-    image_changed = cv.cvtColor(image, eval("cv.COLOR_BGR2" + espace))
-    #cv.imshow("image in HSV", image_changed)
-    
-    (h, s, v) = cv.split(image_changed)
-    v[:] = seuil_min
-    img = cv.merge((v,v,s))
-    rgb = cv.cvtColor(img, cv.COLOR_HSV2RGB)
-    gray = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
-    kernel = np.ones((5,5),np.float32)/25
-    gray = cv.filter2D(gray,-1,kernel)
-    mask = cv.dilate(cv.erode(gray, None, iterations = 3), None, iterations = 3)
-    #cv.imshow("gray", gray)
-    _, mask = cv.threshold(gray, seuil_min, seuil_max, cv.THRESH_BINARY)
-    mask = FillHole(mask)
-    
-    
-    #cv.imshow("image gray", mask)
-    
-    
-    
-    
-    mat = cv.bitwise_and(image,image, mask = mask)
-   # cv.imshow("image in mask", mat)
-    # floutage gaussien 
-    mat = cv.GaussianBlur(mat, (3, 3), 0)
-    
-    # grad calculation
-    gradx = cv.Sobel(mat,cv.CV_8U,1,0,ksize=3)
-    grady=  cv.Sobel(mat,cv.CV_8U,0,1,ksize=3)
-    # cv.imshow("gradient de l'image en x", gradx)
-    # cv.imshow("gradient de l'image en y", grady)
-    grad = cv.add(gradx,grady)
-    #cv.imshow("gradient total "+chemain, grad) 
-    
-    
-   
-    #HOG descriptor.
-    hog = cv.HOGDescriptor("hog.xml")
-    winStride = (8,8)
-    padding = (8,8)
-    locations = ((10,20),)
-    hist.append( [hog.compute(grad,winStride,padding,locations), chemain]  )  
-    
-    
+
+# lire et affichage de l'image qu'on veut
+image_name = 'boeuf2_1'
+chemin = "BDD/" + image_name + ".bmp"
+image = cv.imread(chemin)
+print(chemin)
+
+# redimensionnement de l'image
+dimensions = image.shape
+width = dimensions[0]
+height = dimensions[1]
+image = image[100:int(width * 9 / 10), 100: int(height * 9 / 10)] # extraire une fenetre de l'image
+image = cv.resize(image, (int(width / 2), int(height / 2)))
+# affichage de l'image
+cv.imshow(image_name, image)
+
+# changement de l'espace colorimetrique
+image_changed = cv.cvtColor(image, eval("cv.COLOR_BGR2" + espace))
+cv.imshow("image in HSV", image_changed)
+
+(h, s, v) = cv.split(image_changed)
+v[:] = seuil_min
+img = cv.merge((v,v,s))
+rgb = cv.cvtColor(img, cv.COLOR_HSV2RGB)
+gray = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
+kernel = np.ones((5,5),np.float32)/25
+gray = cv.filter2D(gray,-1,kernel)
+mask = cv.dilate(cv.erode(gray, None, iterations = 3), None, iterations = 3)
+cv.imshow("gray", gray)
+_, mask = cv.threshold(gray, seuil_min, seuil_max, cv.THRESH_BINARY)
+mask = FillHole(mask)
+cv.imshow("image gray", mask)
+
+mat = cv.bitwise_and(image,image, mask = mask)
+cv.imshow("image in mask", mat)
+
+mat = cv.GaussianBlur(mat, (3, 3), 0)
+
+hog(mat)
+
+'''
+
+
+# grad calculation
+gradx = cv.Sobel(mat, cv.CV_8U, 1, 0, ksize=3)
+grady = cv.Sobel(mat, cv.CV_8U, 0, 1, ksize=3)
+
+gradX = cv.convertScaleAbs(gradx)
+gradY = cv.convertScaleAbs(grady)
+
+grad = cv.addWeighted(gradX, 0.5, gradY, 0.5, 0)
+
+cv.imshow("gradient de l'image en x", gradx)
+cv.imshow("gradient de l'image en y", grady)
+cv.imshow("gradient de l'image", grad)
+
+plt.scatter(grad[:, 0], grad[:, 1], s=3)
+plt.show()
+'''
+
+'''
+# calcul de HOG
+winSize = (64,64)
+blockSize = (16, 16)
+blockStride = (8, 8)
+cellSize = (8, 8)
+nbins = 9
+derivAperture = 1
+winSigma = 4.
+histogramNormType = 0
+L2HysThreshold = 2.0000000000000001e-01
+gammaCorrection = 0
+nlevels = 64
+hog = cv.HOGDescriptor(winSize,blockSize,blockStride,cellSize,nbins,derivAperture,winSigma,
+                        histogramNormType,L2HysThreshold,gammaCorrection,nlevels)
+# compute(img[, winStride[, padding[, locations]]]) -> descriptors
+winStride = (8,8)
+padding = (8,8)
+locations = ((10,20),)
+hist = hog.compute(grad,winStride,padding,locations)
+
+
+'''
+print("it's ok")
+
 cv.waitKey(0)
 cv.destroyWindow()
