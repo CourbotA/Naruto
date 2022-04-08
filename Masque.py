@@ -64,9 +64,31 @@ class Masque:
         mask = cv.erode(mask, None, iterations = 3)
         mask = cv.dilate(mask, None, iterations = 3)
         _, mask = cv.threshold(mask, Masque.min_threshold(), Masque.max_threshold(), cv.THRESH_BINARY)
+        mask = area_opening(mask)
         mask = Masque.fill_hole(mask)
         return mask
 
+    @classmethod
+    def area_opening(cls, mask):
+        nb_components, output, stats, centroids = cv.connectedComponentsWithStats(mask, connectivity=8)
+
+        sizes = stats[1:, -1]
+        nb_components = nb_components - 1
+
+        # minimum size to keep an elemen
+        min_size = np.sum(mask > 0) * 0.5;
+
+        # answer image as a np.array
+        mask2 = np.zeros((output.shape))
+
+        # for every component in the image, keep it only if it's above min_size
+        for i in range(0, nb_components):
+            if sizes[i] >= min_size:
+                mask2[output == i + 1] = 255
+
+        mask2 = mask2.astype(np.uint8)
+
+        return mask2
 
 
 
