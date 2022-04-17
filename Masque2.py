@@ -2,7 +2,7 @@
 Extraction des masques des mains
 Notre but est de segmenter les masques des mains, par un leurs couleurs.
 """
-
+import cv2
 import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
@@ -52,7 +52,12 @@ def hog(img):
     plt.show()
     return hist
 
-
+def count_objects(image):
+    #[contours, hierarchy, offset] = cv.findContours(image,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE)
+    # cv2.connectedComponentsWithStats(image, connectivity=4,ltype=4)
+    #return cv.boundingRect(image)
+    #print(image.depth())
+    return cv.CV_16U
 # paramètres:
 espace = 'HSV'
 nbr_classes = 180
@@ -95,7 +100,7 @@ sizes = stats[1:, -1]
 nb_components = nb_components - 1
 
 # minimum size to keep an elemen
-min_size = np.sum(mask > 0) * 0.5;
+min_size = np.sum(mask > 0) * 0.5
 
 # answer image as a np.array
 mask2 = np.zeros((output.shape))
@@ -115,8 +120,8 @@ cv.imshow("image in mask", mat)
 
 mat = cv.GaussianBlur(mat, (3, 3), 0)
 
-hog(mat)
-
+#hog(mat)
+count_objects(mat)
 '''
 
 
