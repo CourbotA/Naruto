@@ -2,7 +2,9 @@
 Extraction des masques des mains
 Notre but est de segmenter les masques des mains, par un leurs couleurs.
 """
+
 import cv2
+
 import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
@@ -52,12 +54,27 @@ def hog(img):
     plt.show()
     return hist
 
-def count_objects(image):
+def count_objects(img):
     #[contours, hierarchy, offset] = cv.findContours(image,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE)
     # cv2.connectedComponentsWithStats(image, connectivity=4,ltype=4)
     #return cv.boundingRect(image)
     #print(image.depth())
-    return cv.CV_16U
+    # cnts = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+    # for c in cnts:
+    #     x, y, w, h = cv2.boundingRect(c)
+    #     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+    # cv2.imshow('image', image)
+    rows = np.any(img, axis=1)
+    cols = np.any(img, axis=0)
+    rmin, rmax = np.where(rows)[0][[0, -1]]
+    cmin, cmax = np.where(cols)[0][[0, -1]]
+
+    print("ligne min, ligne max, colonne min, colonne max : ", rmin, rmax, cmin, cmax)
+    print("hauteur boite : ", rmax-rmin)
+    print("longueur boite : ", cmax-cmin)
+    print("elongation : ", (cmax-cmin)/(rmax-rmin))
+    #print("img = ", type(image))
 # paramètres:
 espace = 'HSV'
 nbr_classes = 180
