@@ -3,10 +3,12 @@ Extraction des masques des mains
 Notre but est de segmenter les masques des mains, par un leurs couleurs.
 """
 
-import cv2
 
+import cv2
 import numpy as np
 import cv2 as cv
+
+from skimage import feature
 from matplotlib import pyplot as plt
 from numpy import linalg as la
 
@@ -59,12 +61,12 @@ def count_objects(img):
     # cv2.connectedComponentsWithStats(image, connectivity=4,ltype=4)
     #return cv.boundingRect(image)
     #print(image.depth())
-    # cnts = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    # cnts = cnts[0] if len(cnts) == 2 else cnts[1]
-    # for c in cnts:
-    #     x, y, w, h = cv2.boundingRect(c)
-    #     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-    # cv2.imshow('image', image)
+    cnts = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+    for c in cnts:
+         x, y, w, h = cv2.boundingRect(c)
+         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+    #cv2.imshow('image', image)
     rows = np.any(img, axis=1)
     cols = np.any(img, axis=0)
     rmin, rmax = np.where(rows)[0][[0, -1]]
@@ -74,6 +76,7 @@ def count_objects(img):
     print("hauteur boite : ", rmax-rmin)
     print("longueur boite : ", cmax-cmin)
     print("elongation : ", (cmax-cmin)/(rmax-rmin))
+
     #print("img = ", type(image))
 # paramètres:
 espace = 'HSV'
@@ -82,7 +85,7 @@ seuil_min = 90
 seuil_max = 225
 
 # lire et affichage de l'image qu'on veut
-image_name = 'dragon4_3'
+image_name = 'oiseau5_1'
 chemin = "BDD/" + image_name + ".bmp"
 image = cv.imread(chemin)
 print(chemin)
@@ -94,11 +97,11 @@ height = dimensions[1]
 image = image[100:int(width * 9 / 10), 100: int(height * 9 / 10)] # extraire une fenetre de l'image
 image = cv.resize(image, (int(width / 2), int(height / 2)))
 # affichage de l'image
-cv.imshow(image_name, image)
+#cv.imshow(image_name, image)
 
 # changement de l'espace colorimetrique
 image_changed = cv.cvtColor(image, eval("cv.COLOR_BGR2" + espace))
-cv.imshow("image in HSV", image_changed)
+#cv.imshow("image in HSV", image_changed)
 
 (h, s, v) = cv.split(image_changed)
 v[:] = seuil_min
@@ -108,7 +111,7 @@ gray = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
 kernel = np.ones((5,5),np.float32)/25
 gray = cv.filter2D(gray,-1,kernel)
 mask = cv.dilate(cv.erode(gray, None, iterations = 3), None, iterations = 3)
-cv.imshow("gray", gray)
+#cv.imshow("gray", gray)
 _, mask = cv.threshold(gray, seuil_min, seuil_max, cv.THRESH_BINARY)
 
 nb_components, output, stats, centroids = cv.connectedComponentsWithStats(mask, connectivity=8)
@@ -133,13 +136,15 @@ mask = FillHole(mask)
 cv.imshow("image gray", mask)
 
 mat = cv.bitwise_and(image,image, mask = mask)
-cv.imshow("image in mask", mat)
+#cv.imshow("image in mask", mat)
 
 mat = cv.GaussianBlur(mat, (3, 3), 0)
 
 #hog(mat)
-count_objects(mat)
-'''
+count_objects(mask)
+cv.imshow("image gray 2", mask)
+
+
 
 
 # grad calculation
@@ -149,15 +154,22 @@ grady = cv.Sobel(mat, cv.CV_8U, 0, 1, ksize=3)
 gradX = cv.convertScaleAbs(gradx)
 gradY = cv.convertScaleAbs(grady)
 
-grad = cv.addWeighted(gradX, 0.5, gradY, 0.5, 0)
+grad = cv.addWeighted(gradX, 1, gradY, 1, 0)
 
-cv.imshow("gradient de l'image en x", gradx)
-cv.imshow("gradient de l'image en y", grady)
+#cv.imshow("gradient de l'image en x", gradx)
+#cv.imshow("gradient de l'image en y", grady)
 cv.imshow("gradient de l'image", grad)
+img_in_mask_ndg = cv.cvtColor(mat, eval("cv.COLOR_BGR2GRAY"))
 
-plt.scatter(grad[:, 0], grad[:, 1], s=3)
+(hog, hog_image) = feature.hog(img_in_mask_ndg, orientations=9,
+                    pixels_per_cell=(8, 8), cells_per_block=(2, 2),
+                    block_norm='L2-Hys', visualize=True, transform_sqrt=True)
+cv2.imshow('HOG Image', hog_image)
+plt.hist(hog)
+
+#plt.scatter(grad[:, 0], grad[:, 1], s=3)
 plt.show()
-'''
+
 
 '''
 # calcul de HOG
@@ -185,4 +197,4 @@ hist = hog.compute(grad,winStride,padding,locations)
 print("it's ok")
 
 cv.waitKey(0)
-cv.destroyWindow()
+#cv.destroyWindow()

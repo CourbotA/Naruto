@@ -59,6 +59,4 @@ Std = std(Tab_std);
 All_data = [boeuf, cheval, chevre, chien, cochon, dragon, lapin, oiseau, rat, serpent, singe, tigre];
 All_data_sorted = sort(All_data);
 All_data_mat = [boeuf; cheval; chevre; chien; cochon; dragon; lapin; oiseau; rat; serpent; singe; tigre];
-moustache = boxplot(All_data_mat');title("statistiques de l'élongation & boite à moustache")
-ylabel("élongation");
-xlabel("classes");
+moustache = boxplot(All_data_mat);title("boi
