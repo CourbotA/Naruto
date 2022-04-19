@@ -14,13 +14,13 @@ def FillHole(mask):
     out = sum(contour_list)
     return out
 
-def area_opening(cls, mask):
+def area_opening(mask):
     nb_components, output, stats, centroids = cv.connectedComponentsWithStats(mask, connectivity=8)
 
     sizes = stats[1:, -1]
     nb_components = nb_components - 1
 
-    # minimum size to keep an elemen
+    # minimum size to keep an element
     min_size = np.sum(mask > 0) * 0.5;
 
     # answer image as a np.array

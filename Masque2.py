@@ -168,9 +168,12 @@ hog_features = hog.compute(image,winStride,padding,locations)
 
 nb_zones = int(len(hog_features)/9)
 hog_max = np.zeros(nb_zones)
+freq_HoG = np.zeros(8)
 for i in range(0,nb_zones):
     tab_tempo =  hog_features[i*9:i*9+8]
     hog_max[i] = np.argmax(tab_tempo)
+for i in range(0,8):
+    freq_HoG[i] = np.count_nonzero(hog_max == i)
 plt.hist(hog_max)
 plt.show()
 

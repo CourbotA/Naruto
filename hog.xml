@@ -2,13 +2,13 @@
 <opencv_storage>
 <hog type_id="opencv-object-detector-hog">
   <winSize>
-    64 128</winSize>
+    1024 768</winSize>
   <blockSize>
-    16 16</blockSize>
+    128 128</blockSize>
   <blockStride>
-    8 8</blockStride>
+    64 64</blockStride>
   <cellSize>
-    8 8</cellSize>
+    64 64</cellSize>
   <nbins>9</nbins>
   <derivAperture>1</derivAperture>
   <winSigma>4.</winSigma>
