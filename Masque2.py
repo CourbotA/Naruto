@@ -8,7 +8,6 @@ import cv2
 import numpy as np
 import cv2 as cv
 
-from skimage import feature
 from matplotlib import pyplot as plt
 from numpy import linalg as la
 
@@ -85,7 +84,7 @@ seuil_min = 90
 seuil_max = 225
 
 # lire et affichage de l'image qu'on veut
-image_name = 'oiseau5_1'
+image_name = 'dragon2_3'
 chemin = "BDD/" + image_name + ".bmp"
 image = cv.imread(chemin)
 print(chemin)
@@ -159,15 +158,20 @@ grad = cv.addWeighted(gradX, 1, gradY, 1, 0)
 #cv.imshow("gradient de l'image en x", gradx)
 #cv.imshow("gradient de l'image en y", grady)
 cv.imshow("gradient de l'image", grad)
-img_in_mask_ndg = cv.cvtColor(mat, eval("cv.COLOR_BGR2GRAY"))
 
-(hog, hog_image) = feature.hog(img_in_mask_ndg, orientations=9,
-                    pixels_per_cell=(8, 8), cells_per_block=(2, 2),
-                    block_norm='L2-Hys', visualize=True, transform_sqrt=True)
-cv2.imshow('HOG Image', hog_image)
-plt.hist(hog)
+hog = cv.HOGDescriptor("hog.xml");
 
-#plt.scatter(grad[:, 0], grad[:, 1], s=3)
+winStride = (8,8)
+padding = (8,8)
+locations = ((10,20),)
+hog_features = hog.compute(image,winStride,padding,locations)
+
+nb_zones = int(len(hog_features)/9)
+hog_max = np.zeros(nb_zones)
+for i in range(0,nb_zones):
+    tab_tempo =  hog_features[i*9:i*9+8]
+    hog_max[i] = np.argmax(tab_tempo)
+plt.hist(hog_max)
 plt.show()
 
 
