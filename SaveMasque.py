@@ -14,6 +14,27 @@ def FillHole(mask):
     out = sum(contour_list)
     return out
 
+def area_opening(cls, mask):
+    nb_components, output, stats, centroids = cv.connectedComponentsWithStats(mask, connectivity=8)
+
+    sizes = stats[1:, -1]
+    nb_components = nb_components - 1
+
+    # minimum size to keep an elemen
+    min_size = np.sum(mask > 0) * 0.5;
+
+    # answer image as a np.array
+    mask2 = np.zeros((output.shape))
+
+    # for every component in the image, keep it only if it's above min_size
+    for i in range(0, nb_components):
+        if sizes[i] >= min_size:
+            mask2[output == i + 1] = 255
+
+    mask2 = mask2.astype(np.uint8)
+
+    return mask2
+
 # paramètres:
 espace = 'HSV'
 nbr_classes = 180
@@ -57,6 +78,7 @@ for img in glob.glob('BDD/*.bmp'):
     gray = cv.GaussianBlur(gray, (5, 5), cv.BORDER_DEFAULT)
     #mask = cv.dilate(cv.erode(gray, None, iterations=3), None, iterations=3)
     _, mask = cv.threshold(gray, seuil_min, seuil_max, cv.THRESH_BINARY)
+    mask = area_opening(mask)
     mask = FillHole(mask)
 
     # save masks
