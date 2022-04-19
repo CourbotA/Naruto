@@ -43,7 +43,7 @@ plot(oiseau,indice);hold on
 plot(rat,indice);hold on
 plot(serpent,indice);hold on
 plot(singe,indice);hold on
-plot(tigre,indice);hold on
+plot(tigre,indice);hold off
 
 legend("chien", "boeuf", "cheval", "chevre", "cochon", "dragon", "lapin", "oiseau", "rat", "serpent", "singe", "tigre");
 ylabel("indice échantillon");
@@ -58,7 +58,10 @@ Std = std(Tab_std);
 
 All_data = [boeuf, cheval, chevre, chien, cochon, dragon, lapin, oiseau, rat, serpent, singe, tigre];
 All_data_sorted = sort(All_data);
+figure()
+moustache2 = boxplot(All_data_sorted');title("statistiques de l'élongation 2 & boite à moustache")
 All_data_mat = [boeuf; cheval; chevre; chien; cochon; dragon; lapin; oiseau; rat; serpent; singe; tigre];
+figure()
 moustache = boxplot(All_data_mat');title("statistiques de l'élongation & boite à moustache")
 ylabel("élongation");
 xlabel("classes");
