@@ -15,3 +15,10 @@ figure()
 moustache = boxplot(moy');title("boite à moustache des intensités des images")
 Moyenne = mean(moy);
 ecarttype = std(moy);
+Max = max(moy);
+Min = min(moy);
+etendue = Max-Min;
+Mediane = 128.3225;
+quartile1 = 125.5939;
+quartile3 = 130.6024;
+outliers = 0;
