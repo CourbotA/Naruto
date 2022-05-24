@@ -75,7 +75,7 @@ class Masque:
         sizes = stats[1:, -1]
         nb_components = nb_components - 1
 
-        # minimum size to keep an elemen
+        # minimum size to keep an element
         min_size = np.sum(mask > 0) * 0.5;
 
         # answer image as a np.array

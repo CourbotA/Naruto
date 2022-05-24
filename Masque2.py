@@ -155,6 +155,9 @@ gradY = cv.convertScaleAbs(grady)
 
 grad = cv.addWeighted(gradX, 1, gradY, 1, 0)
 
+#grad = cv2.cvtColor(grad, cv2.COLOR_BGR2GRAY)
+_,grad = cv.threshold(grad, 90, 255, cv2.THRESH_BINARY)
+
 #cv.imshow("gradient de l'image en x", gradx)
 #cv.imshow("gradient de l'image en y", grady)
 cv.imshow("gradient de l'image", grad)
@@ -177,30 +180,6 @@ for i in range(0,8):
 plt.hist(hog_max)
 plt.show()
 
-
-'''
-# calcul de HOG
-winSize = (64,64)
-blockSize = (16, 16)
-blockStride = (8, 8)
-cellSize = (8, 8)
-nbins = 9
-derivAperture = 1
-winSigma = 4.
-histogramNormType = 0
-L2HysThreshold = 2.0000000000000001e-01
-gammaCorrection = 0
-nlevels = 64
-hog = cv.HOGDescriptor(winSize,blockSize,blockStride,cellSize,nbins,derivAperture,winSigma,
-                        histogramNormType,L2HysThreshold,gammaCorrection,nlevels)
-# compute(img[, winStride[, padding[, locations]]]) -> descriptors
-winStride = (8,8)
-padding = (8,8)
-locations = ((10,20),)
-hist = hog.compute(grad,winStride,padding,locations)
-
-
-'''
 print("it's ok")
 
 cv.waitKey(0)
