@@ -27,9 +27,17 @@ def apprentissage():
         masque = maskclass.mask()
 
         Roi = img.copy()
-        Roi[:,:,2] = np.multiply(masque, img[:,:,0])
-        Roi[:,:,1] = np.multiply(masque, img[:,:,1])
-        Roi[:,:,0] = np.multiply(masque, img[:,:,2])
+        Roi[:, :, 2] = np.multiply(masque, img[:, :, 0])
+        x = np.linalg.norm(Roi[:, :, 2])
+        Roi[:, :, 2] = Roi[:, :, 2] / x
+
+        Roi[:, :, 1] = np.multiply(masque, img[:, :, 1])
+        y = np.linalg.norm(Roi[:, :, 1])
+        Roi[:, :, 1] = Roi[:, :, 1] / y
+
+        Roi[:, :, 0] = np.multiply(masque, img[:, :, 2])
+        z = np.linalg.norm(Roi[:, :, 0])
+        Roi[:, :, 0] = Roi[:, :, 0] / z
 
         squele = Squeletizer()
         att1.append(Elongation.elongation(masque))
@@ -53,8 +61,16 @@ def apprentissage():
 
         Roi = img.copy()
         Roi[:, :, 2] = np.multiply(masque, img[:, :, 0])
+        x = np.linalg.norm(Roi[:, :, 2])
+        Roi[:, :, 2] = Roi[:, :, 2] / x
+
         Roi[:, :, 1] = np.multiply(masque, img[:, :, 1])
+        y = np.linalg.norm(Roi[:, :, 1])
+        Roi[:, :, 1] = Roi[:, :, 1] / y
+
         Roi[:, :, 0] = np.multiply(masque, img[:, :, 2])
+        z = np.linalg.norm(Roi[:, :, 0])
+        Roi[:, :, 0] = Roi[:, :, 0] / z
 
         squele = Squeletizer()
         att1_test.append(Elongation.elongation(masque))
