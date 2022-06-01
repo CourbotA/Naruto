@@ -8,6 +8,7 @@ from Masque import Masquecalculator
 import cv2 as cv
 import numpy as np
 from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import HistGradientBoostingClassifier
 
 
 
@@ -34,13 +35,14 @@ def apprentissage():
         att1.append(Elongation.elongation(masque))
         att2.append(squele.calculate(Roi,masque))
         att3.append(HandsLandmarksSingleIm(imgpath))
+    model_histGrad = HistGradientBoostingClassifier()
     model_Gaussian = GaussianNB()
     Xtrain = np.zeros((12*taille,59))
     for i in range(12*taille):
-        print(att3[i])
         Xtrain[i,:] = [att1[i]]+att2[i]+att3[i]
     Ytrain = ["chien"]*9 + ["boeuf"]*9 + ["cheval"]*9 + ["chevre"]*9 + ["cochon"]*9 + ["dragon"]*9 + ["lapin"]*9 + ["oiseau"]*9 + ["rat"]*9 + ["serpent"]*9 + ["singe"]*9 + ["tigre"]*9
-    model_Gaussian.fit(Xtrain,Ytrain)
+#    model_Gaussian.fit(Xtrain,Ytrain)
+    model_histGrad.fit(Xtrain,Ytrain)
     att1_test = []
     att2_test = []
     att3_test = []
@@ -57,15 +59,18 @@ def apprentissage():
         squele = Squeletizer()
         att1_test.append(Elongation.elongation(masque))
         att2_test.append(squele.calculate(Roi, masque))
-        att3_test.append(HandsLandmarksSingleIm(imgpath)) #à mettre la bonne fonction
+        att3_test.append(HandsLandmarksSingleIm(imgpath))
     Xtest = np.zeros((12*(13-taille),59))
     for i in range(12*(13-taille)):
-        Xtest[i,:] = [att1_test[i]]+att2_test[i]+att3_test[i][0,:]+att3_test[i][1,:]
-    prediction = model_Gaussian.predict(Xtest)
+        Xtest[i,:] = [att1_test[i]]+att2_test[i]+att3_test[i]
+#    prediction = model_Gaussian.predict(Xtest)
+    prediction = model_histGrad.predict(Xtest)
 
 
     verite = ["chien"]*4 + ["boeuf"]*4 + ["cheval"]*4 + ["chevre"]*4 + ["cochon"]*4 + ["dragon"]*4 + ["lapin"]*4 + ["oiseau"]*4 + ["rat"]*4 + ["serpent"]*4 + ["singe"]*4 + ["tigre"]*4
 
-    score = model_Gaussian.score(Xtest,verite)
+#    score = model_Gaussian.score(Xtest,verite)
+    score = model_histGrad.score(Xtest,verite)
     print(score)
+
 apprentissage()

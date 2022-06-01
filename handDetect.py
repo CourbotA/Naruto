@@ -169,7 +169,7 @@ def HandsLandmarksSingleIm(imagepath):
     with mp_hands.Hands(
             static_image_mode=True,
             max_num_hands=2,
-            min_detection_confidence=0.8) as hands:
+            min_detection_confidence=0.6) as hands:
         image = cv.flip(cv.imread(imagepath), 1)
         # Convert the BGR image to RGB before processing.
         results = hands.process(cv.cvtColor(image, cv.COLOR_BGR2RGB))
@@ -283,6 +283,7 @@ def HandsLandmarksSingleIm(imagepath):
                     f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].x * image_width}, '
                     f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].y * image_height})'
                 ]])
+            break
         d = []
         for listImages in DATAS:
             for listPoints in listImages:
