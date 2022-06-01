@@ -31,78 +31,110 @@ with mp_hands.Hands(
     for hand_landmarks in results.multi_hand_landmarks:
       print('hand_landmarks:', hand_landmarks)
       print(
-          f'Index finger tip coordinates: (',
+          
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width}, '
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_height})'
       ) 
       mainDATA = []
-      for elem in mp_hands.HandLandmark : 
-        print(elem)
-        print(
-          f'Index finger tip coordinates: (',
+      mainDATA.append( [
+          (
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].x * image_width}, '
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].y * image_height})'
-      ) 
-        print(
-          f'Index finger tip coordinates: (',
+      ,
+        
+          
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_CMC].x * image_width}, '
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_CMC].y * image_height})'
-      ) 
-        print(
-          f'Index finger tip coordinates: (',
+      
+        ,
+          
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP].x * image_width}, '
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP].y * image_height})'
-      ) 
-        print(
-          f'Index finger tip coordinates: (',
+      
+        ,
+          
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP].x * image_width}, '
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP].y * image_height})'
-      ) 
-        print(
-          f'Index finger tip coordinates: (',
+      
+        ,
+          
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].x * image_width}, '
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].y * image_height})'
-      ) 
-        print(
-          f'Index finger tip coordinates: (',
+      
+        ,
+          
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].x * image_width}, '
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].y * image_height})'
-      ) 
-        print(
-          f'Index finger tip coordinates: (',
+      
+        ,
+          
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_PIP].x * image_width}, '
           f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_PIP].y * image_height})'
-      ) 
-      print(
-          f'Index finger tip coordinates: (',
-          f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_CMC].x * image_width}, '
-          f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_CMC].y * image_height})'
-      ) 
-      print(
-          f'Index finger tip coordinates: (',
-          f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_CMC].x * image_width}, '
-          f'{hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_CMC].y * image_height})'
-      ) 
-
-
-
-
-
-
-HandLandmark.INDEX_FINGER_DIP
-HandLandmark.INDEX_FINGER_TIP
-HandLandmark.MIDDLE_FINGER_MCP
-HandLandmark.MIDDLE_FINGER_PIP
-HandLandmark.MIDDLE_FINGER_DIP
-HandLandmark.MIDDLE_FINGER_TIP
-HandLandmark.RING_FINGER_MCP
-HandLandmark.RING_FINGER_PIP
-HandLandmark.RING_FINGER_DIP
-HandLandmark.RING_FINGER_TIP
-HandLandmark.PINKY_MCP
-HandLandmark.PINKY_PIP
-HandLandmark.PINKY_DIP
-HandLandmark.PINKY_TIP
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_DIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_DIP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_PIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_PIP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_DIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_DIP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_MCP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_MCP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_PIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_PIP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_DIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_DIP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_TIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_TIP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_MCP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_MCP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_PIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_PIP].y * image_height})'
+      
+      ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_DIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_DIP].y * image_height})'
+            ,
+          
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].x * image_width}, '
+          f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].y * image_height})'
+      )])
         
       
         
