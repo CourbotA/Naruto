@@ -1,3 +1,4 @@
+import numpy
 import numpy as np
 import cv2 as cv
 
@@ -66,6 +67,20 @@ class Masquecalculator:
         mask = self.area_opening(mask)
         mask = self.fill_hole(mask)
         return mask
+
+    def maskCamera(self):
+        kernel = np.ones((5, 5), np.float32) / 25
+        mask = self.change_space_color()
+        mask = cv.filter2D(mask, -1, kernel)
+        mask = cv.erode(mask, None, iterations = 3)
+        mask = cv.dilate(mask, None, iterations = 3)
+        _, mask = cv.threshold(mask, self.min_threshold(), self.max_threshold(), cv.THRESH_BINARY)
+        mask = self.area_opening(mask)
+        if mask.sum() == 0:
+            return np.zeros(mask.shape)
+        else:
+            mask = self.fill_hole(mask)
+            return mask
 
     def area_opening(self, mask):
         nb_components, output, stats, centroids = cv.connectedComponentsWithStats(mask, connectivity=8)

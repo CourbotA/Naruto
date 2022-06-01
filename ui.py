@@ -2,14 +2,17 @@ import sys
 import random
 import cv2 as cv
 from PySide6 import QtCore, QtWidgets, QtGui
+from classifieurProduction import ClassifierP
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Bagaruto")
+        self.classifieur = ClassifierP()
+        self.classifieur.build()
 
 
-        self.signe = None
+        self.signe = cv.imread("rasengan.jpg")
         self.hpDif = 0
         self.vid = cv.VideoCapture(0)
         self.frameAttack = 30
@@ -109,56 +112,57 @@ class MyWidget(QtWidgets.QWidget):
         self.timechr.setHMS(0, 0, 5, 0)
         self.chrono.setText(self.timechr.toString("ss:zz"))
         ret, image = self.vid.read()
-        self.posMain, classe = (300,300),""
+        self.posMain  = (300,300)
+        classe = self.classifieur.classify(image)
 
         if classe == "boeuf":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        elif classe == "cheval":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        elif classe == "chevre":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        elif classe == "chien":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        elif classe == "cochon":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        elif classe == "lapin":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        elif classe == "oiseau":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        elif classe == "rat":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        elif classe == "serpent":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        elif classe == "singe":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        elif classe == "tigre":
-            self.signe = 0
-            self.frameAttack = 0
-            self.hpDif = 0
-        else:
             self.signe = cv.imread("rasengan.jpg")
             self.frameAttack = 0
-            self.hpDif = 50
+            self.hpDif = 15
+        elif classe == "cheval":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 15
+        elif classe == "chevre":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 15
+        elif classe == "chien":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 20
+        elif classe == "cochon":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 20
+        elif classe == "dragon":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 20
+        elif classe == "lapin":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 25
+        elif classe == "oiseau":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 25
+        elif classe == "rat":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 25
+        elif classe == "serpent":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 30
+        elif classe == "singe":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 30
+        elif classe == "tigre":
+            self.signe = cv.imread("rasengan.jpg")
+            self.frameAttack = 0
+            self.hpDif = 30
 
         self.signe = cv.resize(self.signe, (round(image.shape[1] * 0.1), round(image.shape[0] * 0.1)))
 

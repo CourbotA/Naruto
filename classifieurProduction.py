@@ -19,7 +19,7 @@ class ClassifierP:
         att1 = []
         att2 = []
         att3 = []
-        for imgpath in glob.glob('Apprentissage/*.bmp'):
+        for imgpath in glob.glob('BDD/*.bmp'):
             # lire et affichage de l'image qu'on veut
             self.maskclass = Masquecalculator(imgpath)
             img = self.maskclass.resize_image()
@@ -44,21 +44,24 @@ class ClassifierP:
     def classify(self,image):
         self.maskclass.set_image_raw(image)
         img = self.maskclass.resize_image()
-        masque = self.maskclass.mask()
+        masque = self.maskclass.maskCamera()
 
-        Roi = img.copy()
-        Roi[:, :, 2] = np.multiply(masque, img[:, :, 0])
-        Roi[:, :, 1] = np.multiply(masque, img[:, :, 1])
-        Roi[:, :, 0] = np.multiply(masque, img[:, :, 2])
+        if not masque.sum() == 0:
+            Roi = img.copy()
+            Roi[:, :, 2] = np.multiply(masque, img[:, :, 0])
+            Roi[:, :, 1] = np.multiply(masque, img[:, :, 1])
+            Roi[:, :, 0] = np.multiply(masque, img[:, :, 2])
 
-        el = Elongation.elongation(masque)
-        squel = self.squele.calculate(Roi, masque)
-        media = HandsLandmarksProd(img)
-        X = np.zeros(59)
-        X = [el] + squel +media
+            el = Elongation.elongation(masque)
+            squel = self.squele.calculate(Roi, masque)
+            media = HandsLandmarksProd(img)
+            X = np.zeros((1,59))
+            X[0,:] = [el] + squel + media
 
-        prediction = self.model_histGrad.predict(X)
+            prediction = self.model_histGrad.predict(X)
 
-        return prediction[0]
+            return prediction[0]
+        else:
+            return ""
 
 
