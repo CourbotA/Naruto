@@ -141,7 +141,7 @@ mat = cv.bitwise_and(image,image, mask = mask)
 mat = cv.GaussianBlur(mat, (3, 3), 0)
 
 #hog(mat)
-count_objects(mask)
+elongation(mask)
 cv.imshow("image gray 2", mask)
 
 

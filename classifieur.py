@@ -1,7 +1,7 @@
 #Supposition répartition gaussienne des classes.
 import glob
 import scipy.stats
-from Masque2 import count_objects
+import Elongation
 from handDetect import HandsLandmarks
 import TestSquel
 import cv2 as cv
@@ -42,10 +42,10 @@ def apprentissage():
     att1 = []
     att2 = []
     att3 = []
-    for img in glob.glob('BDD/apprentissage/*.bmp'):
+    for img in glob.glob('BDD/Apprentissage/*.bmp'):
         # lire et affichage de l'image qu'on veut
         #image = cv.imread(img)
-        att1.append(count_objects(img))
+        att1.append(Elongation.elongation(img))
         att2.append(TestSquel.area_opening(img))  #à mettre la bonne fonction
         att3.append(HandsLandmarks()) #à mettre la bonne fonction
     model_Gaussian = GaussianNB()
