@@ -17,7 +17,7 @@ def HandsLandmarks():
   with mp_hands.Hands(
       static_image_mode=True,
       max_num_hands=2,
-      min_detection_confidence=0.8) as hands:
+      min_detection_confidence=0.6) as hands:
     for idx, file in enumerate(IMAGE_FILES):
      
       # Read an image, flip it around y-axis for correct handedness output (see
@@ -29,8 +29,13 @@ def HandsLandmarks():
      
       if not results.multi_hand_landmarks:
         continue
+      
       image_height, image_width, _ = image.shape
       for hand_landmarks in results.multi_hand_landmarks:
+        if( len(results.multi_handedness) == 2 ):
+            if not(results.multi_handedness[0].classification[0].label == 'left'):
+                continue
+        print(len(results.multi_handedness))
         names.append(file)
         DATAS.append( [
             [
@@ -143,8 +148,6 @@ def HandsLandmarks():
     d = []
     
     for listImages in DATAS : 
-        
-        
         POINTS = []
         for listPoints in listImages : 
            
