@@ -3,7 +3,7 @@ import glob
 import scipy.stats
 import Elongation
 from handDetect import HandsLandmarks
-import TestSquel
+from Squeletization import calculate
 import cv2 as cv
 import numpy as np
 from sklearn.naive_bayes import GaussianNB
@@ -45,13 +45,14 @@ def apprentissage():
     for img in glob.glob('BDD/Apprentissage/*.bmp'):
         # lire et affichage de l'image qu'on veut
         #image = cv.imread(img)
+        #Mask  et ROI à mettre
         att1.append(Elongation.elongation(img))
-        att2.append(TestSquel.area_opening(img))  #à mettre la bonne fonction
-        att3.append(HandsLandmarks()) #à mettre la bonne fonction
+        att2.append(calculate(img))  #à mettre la bonne fonction
+        #att3.append(HandsLandmarks(img)) #à mettre la bonne fonction
     model_Gaussian = GaussianNB()
     Xtrain = np.zeros((12*taille,59))
     for i in range(12*taille):
-        Xtrain[i,:] = [att1[i]]+att2[i]+att3[i][0,:]+att3[i][1,:]
+        Xtrain[i,:] = [att1[i]]+att2[i]#+att3[i][0,:]+att3[i][1,:]
     Ytrain = ["chien"]*9 + ["boeuf"]*9 + ["cheval"]*9 + ["chevre"]*9 + ["cochon"]*9 + ["dragon"]*9 + ["lapin"]*9 + ["oiseau"]*9 + ["rat"]*9 + ["serpent"]*9 + ["singe"]*9 + ["tigre"]*9
     model_Gaussian.fit(Xtrain,Ytrain)
     att1_test = []
@@ -61,14 +62,13 @@ def apprentissage():
         # lire et affichage de l'image qu'on veut
         #image = cv.imread(img)
         att1.append(count_objects(img))
-        att2.append(TestSquel.area_opening(img))  #à mettre la bonne fonction
-        att3.append(HandsLandmarks()) #à mettre la bonne fonction
+        att2.append(calculate(img))  #à mettre la bonne fonction
+        #att3.append(HandsLandmarks(img)) #à mettre la bonne fonction
     Xtest = np.zeros((12*taille,59))
     for i in range(12*taille):
-        Xtest[i,:] = [att1_test[i]]+att2_test[i]+att3_test[i][0,:]+att3_test[i][1,:]
+        Xtest[i,:] = [att1_test[i]]+att2_test[i]#+att3_test[i][0,:]+att3_test[i][1,:]
     prediction = model_Gaussian.predict(Xtest)
     print(prediction)
-    # y_te
     # precision = accuracy_score(y_test, prediction) * 100
     # for i in range(12):
     #     vals1 = att1[i*taille+0:(i+1)*taille - 1]   #élongation
