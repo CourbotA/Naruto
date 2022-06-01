@@ -7,36 +7,24 @@ import glob
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
-def HandsLandmarks():
-  IMAGE_FILES = []
-  for image in glob.glob('BDD/*.bmp'):
-      IMAGE_FILES.append(image)
-  DATAS = []
-  names = []
-  FinalData = []
-  with mp_hands.Hands(
+DATAS = []
+
+def landmarkImg(imgFile):
+    with mp_hands.Hands(
       static_image_mode=True,
       max_num_hands=2,
-      min_detection_confidence=0.6) as hands:
-    for idx, file in enumerate(IMAGE_FILES):
-     
+      min_detection_confidence=0.8) as hands:
       # Read an image, flip it around y-axis for correct handedness output (see
       # above).
-      image = cv.flip(cv.imread(file), 1)
+      image = cv.flip(cv.imread(imgFile), 1)
       # Convert the BGR image to RGB before processing.
       results = hands.process(cv.cvtColor(image, cv.COLOR_BGR2RGB))
 
      
       if not results.multi_hand_landmarks:
-        continue
-      
+        return null
       image_height, image_width, _ = image.shape
       for hand_landmarks in results.multi_hand_landmarks:
-        if( len(results.multi_handedness) == 2 ):
-            if not(results.multi_handedness[0].classification[0].label == 'left'):
-                continue
-        print(len(results.multi_handedness))
-        names.append(file)
         DATAS.append( [
             [
             f'{hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].x * image_width}, '
@@ -141,26 +129,13 @@ def HandsLandmarks():
             
             f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].x * image_width}, '
             f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].y * image_height})'
-        ] ])            
-        
-    indexImg = 0 
-    
-    d = []
-    
-    for listImages in DATAS : 
-        POINTS = []
-        for listPoints in listImages : 
-           
-            for xy in listPoints:
-                xyy = []
-                indexC= 0
-                for nb in xy.strip("')").split(","):
-                    indexC +=1
-                    xyy.append(float(nb))
-                POINTS.append(xyy)
-                
-        d.append(POINTS) 
-        indexImg+=1
-        
-    return names,d
-      
+        ] ])     
+
+    p = []
+    for xy in DATAS:
+        xyy = []
+        for nb in xy.strip("')").split(","):
+            xyy.append(float(nb))
+            p.append(xyy)     
+
+    print(p)

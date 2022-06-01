@@ -69,59 +69,7 @@ def apprentissage():
         Xtest[i,:] = [att1_test[i]]+att2_test[i]#+att3_test[i][0,:]+att3_test[i][1,:]
     prediction = model_Gaussian.predict(Xtest)
     print(prediction)
-    # precision = accuracy_score(y_test, prediction) * 100
-    # for i in range(12):
-    #     vals1 = att1[i*taille+0:(i+1)*taille - 1]   #élongation
-    #     vals2 = att2[i*taille+0:(i+1)*taille - 1]   #squelette bizarre gradient de clément
-    #     vals3 = att3[i*taille+0:(i+1)*taille - 1]   #données de la librairie google
-    #
-    #     #traitement des tableaux d'attributs pour calculer une moyenne/cov. Pas besoin pour vals1.
-    #     std = []
-    #     moy = []
-    #
-    #     vals1 = np.array(vals1)
-    #     vals2 = np.array(vals2)
-    #     vals3 = np.array(vals3)
-    #
-    #     #vals1
-    #     moy.append(np.sum(vals1)/len(vals1))
-    #     std.append(np.std(vals1))
-    #
-    #     #vals2
-    #     elmt_moy = []
-    #     elmt_std = []
-    #     for l in range(16):
-    #         for k in range(0, taille):
-    #             elmt_std.append(vals2[k][l])
-    #             elmt_moy.append(vals2[k][l])
-    #         elmt_std = np.array(elmt_std)
-    #         elmt_moy = np.array(elmt_moy)
-    #         std.append(np.std(elmt_std))
-    #         moy.append(np.sum(elmt_moy)/len(elmt_moy))
-    #         elmt_moy = np.setdiff1d(elmt_moy,elmt_moy)
-    #         elmt_std = np.setdiff1d(elmt_std,elmt_std)
-    #
-    #     #vals3  21x2 tab
-    #     elmt_moy = []
-    #     elmt_std = []
-    #     for l in range(21):
-    #         for m in range(2):
-    #             for k in range(0, taille):
-    #                 elmt_std.append(vals3[k][l][m])
-    #                 elmt_moy.append(vals3[k][l][m])
-    #             elmt_std = np.array(elmt_std)
-    #             elmt_moy = np.array(elmt_moy)
-    #             std.append(np.std(elmt_std))
-    #             moy.append(np.sum(elmt_moy) / len(elmt_moy))
-    #             elmt_moy = np.setdiff1d(elmt_moy, elmt_moy)
-    #             elmt_std = np.setdiff1d(elmt_std, elmt_std)
-    #
-    #     #fin du traitement : création du signe correspondant
-    #     sig = Signe(tab_ref[i])
-    #     sig.set_Moy(moy)
-    #     sig.set_Std(std)
-    #     tab_signes.append(sig)
-
+    
 def ifzero(tab):
     pos = False
     neg = False
