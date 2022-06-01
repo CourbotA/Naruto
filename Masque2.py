@@ -55,7 +55,7 @@ def hog(img):
     plt.show()
     return hist
 
-def count_objects(img):
+def elongation(img):
     #[contours, hierarchy, offset] = cv.findContours(image,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE)
     # cv2.connectedComponentsWithStats(image, connectivity=4,ltype=4)
     #return cv.boundingRect(image)
@@ -71,10 +71,11 @@ def count_objects(img):
     rmin, rmax = np.where(rows)[0][[0, -1]]
     cmin, cmax = np.where(cols)[0][[0, -1]]
 
-    print("ligne min, ligne max, colonne min, colonne max : ", rmin, rmax, cmin, cmax)
-    print("hauteur boite : ", rmax-rmin)
-    print("longueur boite : ", cmax-cmin)
-    print("elongation : ", (cmax-cmin)/(rmax-rmin))
+    # print("ligne min, ligne max, colonne min, colonne max : ", rmin, rmax, cmin, cmax)
+    # print("hauteur boite : ", rmax-rmin)
+    # print("longueur boite : ", cmax-cmin)
+    # print("elongation : ", (cmax-cmin)/(rmax-rmin))
+    return (cmax-cmin)/(rmax-rmin)
 
     #print("img = ", type(image))
 # paramètres:
