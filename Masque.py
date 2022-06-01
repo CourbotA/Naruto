@@ -14,6 +14,9 @@ class Masquecalculator:
         path = image_name
         self.image = cv.imread(path)
 
+    def set_image_raw(self, image):
+        self.image = image
+
     @staticmethod
     def min_threshold(): return 90
     @staticmethod
