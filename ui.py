@@ -166,8 +166,6 @@ class MyWidget(QtWidgets.QWidget):
     def update_chr(self):
         ms = self.timechr.msec()
         s = self.timechr.second()
-        print(s)
-        print(ms)
         if ms==0:
             if s!= 0:
                 ms = 990
@@ -176,12 +174,6 @@ class MyWidget(QtWidgets.QWidget):
             ms = ms - 10
         self.timechr.setHMS(0,0,s,ms)
         self.chrono.setText(self.timechr.toString("ss:z"))
-
-
-
-
-
-
 
 def main():
     app = QtWidgets.QApplication([])

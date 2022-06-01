@@ -2,9 +2,10 @@ import numpy as np
 import cv2 as cv
 import math
 
-class Squeletization():
 
-    def count_by_region(skeleton):
+class Squeletizer:
+
+    def count_by_region(self,skeleton):
         width = math.floor(len(skeleton) * 0.25)
         height = math.floor(len(skeleton[0]) * 0.25)
         size = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -18,7 +19,7 @@ class Squeletization():
                 size[i * 4 + j] = len(contours[0])
         return size
 
-    def area_opening(mask):
+    def area_opening(self,mask):
         nb_components, output, stats, centroids = cv.connectedComponentsWithStats(mask, connectivity=8)
 
         sizes = stats[1:, -1]
@@ -39,7 +40,7 @@ class Squeletization():
 
         return mask2
 
-    def squel(img):
+    def squel(self,img):
 
         # Threshold the image
         ret, img = cv.threshold(img, 127, 255, 0)
@@ -67,13 +68,13 @@ class Squeletization():
 
         return skel
 
-    def calculate(self,ROI,Mask):
+    def calculate(self, ROI, Mask):
         edges = cv.Canny(ROI, 50, 250);
         kernel = np.ones((5, 5), np.uint8);
         dilated_edges = cv.dilate(edges, kernel, iterations=2);
 
-        masque = cv.cvtColor(Mask, cv.COLOR_RGB2GRAY)
-        Asquel = masque - dilated_edges
+#        masque = cv.cvtColor(Mask, cv.COLOR_RGB2GRAY)
+        Asquel = Mask - dilated_edges
 
         skeleton = self.squel(Asquel)
         skeleton = self.area_opening(skeleton)

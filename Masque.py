@@ -1,17 +1,17 @@
 import numpy as np
 import cv2 as cv
 
-class Masque:
+class Masquecalculator:
     def __init__(self, image_name):
-        path = "BDD/" + image_name + ".bmp"
+        path = image_name
         self.image = cv.imread(path)
+        print(path)
 
     def get_image(self):
         return self.image
 
-    @sets
     def set_image(self, image_name):
-        path = "BDD/" + image_name + ".bmp"
+        path = image_name
         self.image = cv.imread(path)
 
     @staticmethod
@@ -23,29 +23,26 @@ class Masque:
     @staticmethod
     def nbr_classes(): return 180
 
-    @classmethod
-    def resize_image(cls, percentage):
-        image = cls.get_image()
+    def resize_image(self):
+        image = self.image
         dimensions = image.shape
         width = dimensions[0]; height = dimensions[1]
         # extract a window from the image
         window = image[100: int(width * 9 / 100), 100: int(height * 9 /10)]
-        image_out = cv.resize(image, (int(width * percentage / 100), int(height * percentage / 100)))
+        image_out = cv.resize(image, (int(width * 50 / 100), int(height * 50 / 100)))
         return image_out
 
-    @classmethod
-    def change_space_color(cls):
-        image = cls.resize_image()
-        image_changed = cv.cvtColor(image, eval("cv.COLOR_BGR2" + Masque.space()))
+    def change_space_color(self):
+        image = self.resize_image()
+        image_changed = cv.cvtColor(image, eval("cv.COLOR_BGR2" + Masquecalculator.space()))
         (h, s, v) = cv.split(image_changed)
-        v[:] = Masque.min_threshold()
+        v[:] = Masquecalculator.min_threshold()
         image_changed = cv.merge((v, v, s))
         image_changed = cv.cvtColor(image_changed, cv.COLOR_HSV2RGB)
         image_changed = cv.cvtColor(image_changed, cv.COLOR_RGB2GRAY)
         return image_changed
 
-    @classmethod
-    def fill_hole(cls,mask):
+    def fill_hole(self,mask):
         contours, hierarchy = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
         len_contour = len(contours)
         contour_list = []
@@ -56,20 +53,18 @@ class Masque:
         out = sum(contour_list)
         return out
 
-    @classmethod
-    def mask(cls):
+    def mask(self):
         kernel = np.ones((5, 5), np.float32) / 25
-        mask = Masque.change_space_color()
+        mask = self.change_space_color()
         mask = cv.filter2D(mask, -1, kernel)
         mask = cv.erode(mask, None, iterations = 3)
         mask = cv.dilate(mask, None, iterations = 3)
-        _, mask = cv.threshold(mask, Masque.min_threshold(), Masque.max_threshold(), cv.THRESH_BINARY)
-        mask = area_opening(mask)
-        mask = Masque.fill_hole(mask)
+        _, mask = cv.threshold(mask, self.min_threshold(), self.max_threshold(), cv.THRESH_BINARY)
+        mask = self.area_opening(mask)
+        mask = self.fill_hole(mask)
         return mask
 
-    @classmethod
-    def area_opening(cls, mask):
+    def area_opening(self, mask):
         nb_components, output, stats, centroids = cv.connectedComponentsWithStats(mask, connectivity=8)
 
         sizes = stats[1:, -1]
