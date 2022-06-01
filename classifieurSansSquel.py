@@ -87,6 +87,11 @@ def apprentissage():
 
 #    score = model_Gaussian.score(Xtest,verite)
     score = model_histGrad.score(Xtest,verite)
-    print(score)
+
+    for i in range(0,12):
+        scoreC = score = model_histGrad.score(Xtest[i*4:i*4+4],verite[i*4:i*4+4])
+        print("scoreClasse " + str(i + 1) + ":" + str(scoreC))
+
+    print("Score Total :" + str(score))
 
 apprentissage()

@@ -1,0 +1,2 @@
+Ce dossier contient notre code sans la base de données, trouvable avec ce code au lien github suivant
+https://github.com/CourbotA/Naruto
