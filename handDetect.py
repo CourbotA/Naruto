@@ -22,7 +22,8 @@ with mp_hands.Hands(
     results = hands.process(cv.cvtColor(image, cv.COLOR_BGR2RGB))
 
     # Print handedness and draw hand landmarks on the image.
-    print('Handedness:', results.multi_handedness)
+    #print('Handedness:', results.multi_handedness)
+    print(type(results.multi_handedness[0]))
     if not results.multi_hand_landmarks:
       continue
     image_height, image_width, _ = image.shape
