@@ -1,5 +1,6 @@
 
 import mediapipe as mp
+import numpy as np
 import cv2 as cv
 import glob
 mp_drawing = mp.solutions.drawing_utils
@@ -10,25 +11,23 @@ def HandsLandmarks():
   for image in glob.glob('BDD/*.bmp'):
       IMAGE_FILES.append(image)
   DATAS = []
-
+  FinalData = []
   with mp_hands.Hands(
       static_image_mode=True,
       max_num_hands=2,
       min_detection_confidence=0.8) as hands:
     for idx, file in enumerate(IMAGE_FILES):
-      print(idx)
+     
       # Read an image, flip it around y-axis for correct handedness output (see
       # above).
       image = cv.flip(cv.imread(file), 1)
       # Convert the BGR image to RGB before processing.
       results = hands.process(cv.cvtColor(image, cv.COLOR_BGR2RGB))
 
-      # Print handedness and draw hand landmarks on the image.
-      print('Handedness:', results.multi_handedness)
+     
       if not results.multi_hand_landmarks:
         continue
       image_height, image_width, _ = image.shape
-      annotated_image = image.copy()
       for hand_landmarks in results.multi_hand_landmarks:
         
         DATAS.append( [
@@ -136,4 +135,35 @@ def HandsLandmarks():
             f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].x * image_width}, '
             f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].y * image_height})'
         ] ])
-    return DATAS      
+            
+        
+    indexImg = 0 
+    
+    print(DATAS)
+    
+    
+    
+    d = []
+    for listImages in DATAS : 
+        
+        indexPoint = 0
+        for listPoints in listImages : 
+            POINTS = []
+            for xy in listPoints:
+                xyy = []
+                indexC= 0
+                for nb in xy.strip("')").split(","):
+                    indexC +=1
+                   # print('idexC ',indexImg,' point ',indexPoint , ' coor ',indexC)
+                    #print(float(nb))
+                    xyy.append(float(nb))
+                    print(xyy)
+             #   POINTS.append(xyy)
+            #print(len(POINTS))
+           # d.append(POINTS)    
+                #d[indexPoint][indexImg] = xyyy
+            indexPoint +=1
+        indexImg+=1        
+                
+    return d
+      
