@@ -12,6 +12,7 @@ def HandsLandmarks():
   for image in glob.glob('BDD/*.bmp'):
       IMAGE_FILES.append(image)
   DATAS = []
+  names = []
   FinalData = []
   with mp_hands.Hands(
       static_image_mode=True,
@@ -30,7 +31,7 @@ def HandsLandmarks():
         continue
       image_height, image_width, _ = image.shape
       for hand_landmarks in results.multi_hand_landmarks:
-        
+        names.append(file)
         DATAS.append( [
             [
             f'{hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].x * image_width}, '
@@ -139,31 +140,24 @@ def HandsLandmarks():
         
     indexImg = 0 
     
-    print(DATAS)
-    
-    
-    
     d = []
+    
     for listImages in DATAS : 
         
-        indexPoint = 0
+        
+        POINTS = []
         for listPoints in listImages : 
-            POINTS = []
+           
             for xy in listPoints:
                 xyy = []
                 indexC= 0
                 for nb in xy.strip("')").split(","):
                     indexC +=1
-                   # print('idexC ',indexImg,' point ',indexPoint , ' coor ',indexC)
-                    #print(float(nb))
                     xyy.append(float(nb))
-                    print(xyy)
-             #   POINTS.append(xyy)
-            #print(len(POINTS))
-           # d.append(POINTS)    
-                #d[indexPoint][indexImg] = xyyy
-            indexPoint +=1
-        indexImg+=1        
+                POINTS.append(xyy)
                 
-    return d
+        d.append(POINTS) 
+        indexImg+=1
+        
+    return names,d
       
