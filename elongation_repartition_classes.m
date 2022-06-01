@@ -51,6 +51,7 @@ xlabel("élongation");
 
 %% Moyenne et écart type de la caractéristique élongation
 
+%mu1 -> mu12 de l'attribut 1
 Tab_moy = [mean(chien), mean(boeuf), mean(cheval), mean(chevre), mean(cochon), mean(dragon), mean(lapin), mean(oiseau), mean(rat), mean(serpent), mean(singe), mean(tigre)];
 Tab_std = [std(chien), std(boeuf), std(cheval), std(chevre), std(cochon), std(dragon), std(lapin), std(oiseau), std(rat), std(serpent), std(singe), std(tigre)];
 Moy = mean(Tab_moy);

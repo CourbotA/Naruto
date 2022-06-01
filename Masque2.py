@@ -162,7 +162,7 @@ _,grad = cv.threshold(grad, 90, 255, cv2.THRESH_BINARY)
 #cv.imshow("gradient de l'image en y", grady)
 cv.imshow("gradient de l'image", grad)
 
-hog = cv.HOGDescriptor("hog.xml");
+hog = cv.HOGDescriptor("hog.xml")
 
 winStride = (8,8)
 padding = (8,8)

@@ -76,7 +76,7 @@ class Masque:
         nb_components = nb_components - 1
 
         # minimum size to keep an element
-        min_size = np.sum(mask > 0) * 0.5;
+        min_size = np.sum(mask > 0) * 0.5
 
         # answer image as a np.array
         mask2 = np.zeros((output.shape))
