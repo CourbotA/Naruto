@@ -78,7 +78,7 @@ def apprentissage():
             elmt_moy = np.setdiff1d(elmt_moy,elmt_moy)
             elmt_std = np.setdiff1d(elmt_std,elmt_std)
 
-        #vals3
+        #vals3  21x2 tab
 
         #fin du traitement : création du signe correspondant
         sig = Signe(tab_ref[i])
@@ -86,12 +86,12 @@ def apprentissage():
         sig.set_Std(std)
         tab_signes.append(sig)
 
-def classif(img):
-    att1 = count_objects(img)
-    att2 = TestSquel.area_opening(img)
-    #att3 =
-
+def calc_frontiere():
     Papriori = 1/12
     x = np.linspace(-1,30,310)
+    gaussienne = []
     for i in range(12):
-        y = scipy.stats.norm.pdf(x, tab_signes[i].moy, tab_signes[i].std)
+        for j in range(59):
+            gaussienne.append(np.array(scipy.stats.norm.pdf(x, tab_signes[i].moy[j], tab_signes[i].std[j]))*Papriori)
+    gaussienne = np.array(gaussienne)
+    Paposteriori = gaussienne / sum(gaussienne)
