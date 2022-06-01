@@ -3,6 +3,7 @@ import mediapipe as mp
 import numpy as np
 import cv2 as cv
 import glob
+
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
@@ -134,8 +135,7 @@ def HandsLandmarks():
             
             f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].x * image_width}, '
             f'{hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].y * image_height})'
-        ] ])
-            
+        ] ])            
         
     indexImg = 0 
     
