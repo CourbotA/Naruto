@@ -6,6 +6,7 @@ Created on Fri Apr  8 14:26:36 2022
 """
 
 import cv2
+
 img = cv2.imread("Masques/masque_boeuf1.bmp",0)
 gx = cv2.Sobel(img, cv2.CV_32F, 1, 0)
 gy = cv2.Sobel(img, cv2.CV_32F, 0, 1)
